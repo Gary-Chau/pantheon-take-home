@@ -9,6 +9,10 @@
 
 </div>
 
+AI assistance is allowed and expected. Submit the complete raw session export or native
+conversation log produced by your AI tool, and identify at least 3 moments where you
+rejected, corrected, or substantially reworked an AI suggestion.
+
 ## What is all this?
 This "programming assignment" is really just a way to get you used to
 some of the tools we use every day at Pantheon to help with our research.
@@ -119,16 +123,21 @@ what can you do in pytorch lightning to make sure data is allocated to the corre
 - Add a section at the top of this README, containing your answers to the questions, as well as the output `wandb` graphs and images resulting from your training run. You are also invited to talk about difficulties you encountered and how you overcame them
 - Link to your git repository in your email reply and share it with us/make it public
 
-# Chatbot Assignment:
+## Chatbot Assignment
 
-To complete this assignment, please use any LLM evaluation platform or tool you are familiar with — or simply try with [Poe](https://poe.com/) — to test different models, capture their responses, and document your findings.
+Compare at least **3 LLMs**, each running locally on your device through
+[Ollama](https://ollama.com/) or another local model server suitable for your hardware. A GPU is not required.
 
-* Compare atleast 3 different models and provide insights on Content Quality, Contextual Understanding, Language Fluency and Ethical Considerations with examples.
+For the model-comparison evidence, record each model, complete prompt (including relevant
+system instructions), parameter settings, and unedited response. Clearly label each test
+so it can be matched to your analysis, and do not include API keys or other secrets.
 
-* What are the parameters that can be used to control response. Explain in detail.
-
-* Explore various techniques used in prompt engineering, such as template-based prompts, rule-based prompts, and machine learning-based prompts and provide what are the challenges and considerations in designing effective prompts with examples.
-
-* What is retrieval-augmented generation(RAG) and how is it applied in natural language generation tasks?
+- Compare the models across content quality, contextual understanding, language fluency,
+  and ethical considerations. Support your conclusions with examples from your tests.
+- Explain the parameters used to control model responses and how each affects behavior.
+- Explore prompt-engineering techniques such as template-based, rule-based, and
+  machine-learning-based prompting. Discuss their challenges and trade-offs with examples.
+- Explain retrieval-augmented generation (RAG) and how it is applied to natural-language
+  generation tasks.
 
 <br>
