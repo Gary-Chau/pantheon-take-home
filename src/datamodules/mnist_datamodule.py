@@ -1,9 +1,17 @@
+import ssl
 from typing import Optional, Tuple
 
+import certifi
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
 from torchvision.datasets import MNIST
 from torchvision.transforms import transforms
+
+# Windows + conda Python can fail loading the system CA store
+# (ssl.SSLError: ASN1 NOT_ENOUGH_DATA). Force urllib/HTTPS to use certifi only.
+ssl._create_default_https_context = lambda: ssl.create_default_context(
+    cafile=certifi.where()
+)
 
 
 class MNISTDataModule(LightningDataModule):

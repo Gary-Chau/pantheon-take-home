@@ -1,0 +1,66 @@
+trainer:
+  _target_: pytorch_lightning.Trainer
+  gpus: 0
+  weights_summary: null
+  progress_bar_refresh_rate: 5
+  resume_from_checkpoint: null
+  max_epochs: 10
+model:
+  _target_: src.models.mnist_gan_model.MNISTGANModel
+  lr: 0.0002
+  b1: 0.5
+  b2: 0.999
+  n_classes: 10
+  latent_dim: 100
+  channels: 1
+  img_size: 32
+  generator:
+    _target_: src.models.modules.generators.Generator
+    n_classes: ${..n_classes}
+    latent_dim: ${..latent_dim}
+    channels: ${..channels}
+    img_size: ${..img_size}
+  discriminator:
+    _target_: src.models.modules.discriminators.Discriminator
+    n_classes: ${..n_classes}
+    channels: ${..channels}
+    img_size: ${..img_size}
+datamodule:
+  _target_: src.datamodules.mnist_datamodule.MNISTDataModule
+  data_dir: ${data_dir}
+  batch_size: 64
+  train_val_test_split:
+  - 55000
+  - 5000
+  - 10000
+  num_workers: 0
+  pin_memory: false
+callbacks:
+  model_checkpoint:
+    _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    monitor: null
+    dirpath: ckpts
+    filename: '{step:09d}'
+    every_n_train_steps: 10000
+    save_top_k: -1
+    save_last: true
+logger:
+  wandb:
+    _target_: pytorch_lightning.loggers.wandb.WandbLogger
+    project: Tests
+    name: null
+    save_dir: .
+    offline: false
+    id: null
+    log_model: false
+    prefix: ''
+    job_type: train
+    group: ''
+    tags: []
+seed: 12345
+work_dir: ${hydra:runtime.cwd}
+data_dir: ${work_dir}/data/
+debug: false
+print_config: true
+ignore_warnings: true
+test_after_training: true

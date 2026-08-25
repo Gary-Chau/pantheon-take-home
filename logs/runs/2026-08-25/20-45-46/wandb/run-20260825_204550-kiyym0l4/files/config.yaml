@@ -1,0 +1,135 @@
+_wandb:
+    value:
+        cli_version: 0.24.2
+        e:
+            w2cg4l9c44wfn35emvx423nmqndkdrp7:
+                args:
+                    - experiment=train_mnist_gan.yaml
+                    - trainer.gpus=0
+                email: chaukahogary@gmail.com
+                executable: C:\ProgramData\anaconda3\envs\pantheon-py38\python.exe
+                git:
+                    commit: f432fd884d8f0f2a9bbdea379b1c3d12ffe56e32
+                    remote: https://github.com/pantheon-lab-public/ai-take-home-test.git
+                host: WIN-3OV2KKB77R3
+                os: Windows-10-10.0.19045-SP0
+                program: run.py
+                python: CPython 3.8.20
+                root: .
+                startedAt: "2026-08-25T12:45:50.741454Z"
+                writerId: w2cg4l9c44wfn35emvx423nmqndkdrp7
+        m:
+            - "1": trainer/global_step
+              "6":
+                - 3
+              "7": []
+            - "2": '*'
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.8.20
+        t:
+            "1":
+                - 1
+                - 9
+                - 41
+                - 50
+            "2":
+                - 1
+                - 9
+                - 41
+                - 50
+            "3":
+                - 7
+                - 15
+                - 66
+            "4": 3.8.20
+            "5": 0.24.2
+            "8":
+                - 3
+            "12": 0.24.2
+            "13": windows-amd64
+callbacks/model_checkpoint/_target_:
+    value: pytorch_lightning.callbacks.ModelCheckpoint
+callbacks/model_checkpoint/dirpath:
+    value: ckpts
+callbacks/model_checkpoint/every_n_train_steps:
+    value: 10000
+callbacks/model_checkpoint/filename:
+    value: '{step:09d}'
+callbacks/model_checkpoint/monitor:
+    value: None
+callbacks/model_checkpoint/save_last:
+    value: true
+callbacks/model_checkpoint/save_top_k:
+    value: -1
+datamodule/_target_:
+    value: src.datamodules.mnist_datamodule.MNISTDataModule
+datamodule/batch_size:
+    value: 64
+datamodule/data_dir:
+    value: E:\ai-take-home-test/data/
+datamodule/num_workers:
+    value: 0
+datamodule/pin_memory:
+    value: false
+datamodule/train_val_test_split:
+    value:
+        - 55000
+        - 5000
+        - 10000
+model/_target_:
+    value: src.models.mnist_gan_model.MNISTGANModel
+model/b1:
+    value: 0.5
+model/b2:
+    value: 0.999
+model/channels:
+    value: 1
+model/discriminator/_target_:
+    value: src.models.modules.discriminators.Discriminator
+model/discriminator/channels:
+    value: 1
+model/discriminator/img_size:
+    value: 32
+model/discriminator/n_classes:
+    value: 10
+model/generator/_target_:
+    value: src.models.modules.generators.Generator
+model/generator/channels:
+    value: 1
+model/generator/img_size:
+    value: 32
+model/generator/latent_dim:
+    value: 100
+model/generator/n_classes:
+    value: 10
+model/img_size:
+    value: 32
+model/latent_dim:
+    value: 100
+model/lr:
+    value: 0.0002
+model/n_classes:
+    value: 10
+model/params_not_trainable:
+    value: 0
+model/params_total:
+    value: 2813257
+model/params_trainable:
+    value: 2813257
+seed:
+    value: 12345
+trainer/_target_:
+    value: pytorch_lightning.Trainer
+trainer/gpus:
+    value: 0
+trainer/max_epochs:
+    value: 10
+trainer/progress_bar_refresh_rate:
+    value: 5
+trainer/resume_from_checkpoint:
+    value: None
+trainer/weights_summary:
+    value: None

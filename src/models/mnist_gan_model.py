@@ -52,56 +52,69 @@ class MNISTGANModel(LightningModule):
         raise NotImplementedError
 
     def step(self, batch, batch_idx, optimizer_idx=None) -> Tuple[Dict[str, Tensor], Optional[Tensor]]:
-        # TODO: implement the step method of the GAN model.
-        #     : This function should return both a dictionary of losses
-        #     : and current loss of the network being optimised.
-        #     :
-        #     : When training with pytorch lightning, because we defined 2 optimizers in
-        #     : the `configure_optimizers` function above, we use the `optimizer_idx` parameter
-        #     : to keep a track of which network is being optimised.
-
         imgs, labels = batch
         batch_size = imgs.shape[0]
 
         log_dict = {}
         loss = None
 
-        # TODO: Create adversarial ground truths
+        # Adversarial ground truths
+        valid = torch.ones(batch_size, 1, device=self.device)
+        fake = torch.zeros(batch_size, 1, device=self.device)
 
-        # TODO: Create noise and labels for generator input
+        # Noise and random labels used as generator input
+        z = torch.randn(batch_size, self.hparams.latent_dim, device=self.device)
+        gen_labels = torch.randint(0, self.hparams.n_classes, (batch_size,), device=self.device)
 
         if optimizer_idx == 0 or not self.training:
-            # TODO: generate images and calculate the adversarial loss for the generator
-            # HINT: when optimizer_idx == 0 the model is optimizing the generator
-            raise NotImplementedError
+            # Generate a batch of images
+            gen_imgs = self.generator(z, gen_labels)
 
-            # TODO: Generate a batch of images
+            # Calculate loss to measure generator's ability to fool the discriminator
+            validity = self.discriminator(gen_imgs, gen_labels)
+            g_loss = self.adversarial_loss(validity, valid)
 
-            # TODO: Calculate loss to measure generator's ability to fool the discriminator
+            log_dict["g_loss"] = g_loss
+            loss = g_loss
 
         if optimizer_idx == 1 or not self.training:
-            # TODO: generate images and calculate the adversarial loss for the discriminator
-            # HINT: when optimizer_idx == 1 the model is optimizing the discriminator
-            raise NotImplementedError
+            # Generate a batch of images (detached so the generator is not updated here)
+            gen_imgs = self.generator(z, gen_labels).detach()
 
-            # TODO: Generate a batch of images
+            # Calculate loss for real images
+            validity_real = self.discriminator(imgs, labels)
+            d_real_loss = self.adversarial_loss(validity_real, valid)
 
-            # TODO: Calculate loss for real images
+            # Calculate loss for fake images
+            validity_fake = self.discriminator(gen_imgs, gen_labels)
+            d_fake_loss = self.adversarial_loss(validity_fake, fake)
 
-            # TODO: Calculate loss for fake images
+            # Calculate total discriminator loss
+            d_loss = (d_real_loss + d_fake_loss) / 2
 
-            # TODO: Calculate total discriminator loss
+            log_dict["d_loss"] = d_loss
+            loss = d_loss
 
         return log_dict, loss
 
     def on_epoch_end(self):
-        # TODO: implement functionality to log predicted images to wandb
-        #     : at the end of each epoch
+        # Create one fake image per class (0-9)
+        z = torch.randn(self.hparams.n_classes, self.hparams.latent_dim, device=self.device)
+        labels = torch.arange(self.hparams.n_classes, device=self.device)
 
-        # TODO: Create fake images
+        self.generator.eval()
+        with torch.no_grad():
+            gen_imgs = self.generator(z, labels)
+        self.generator.train()
+
+        # Generator outputs are Tanh-activated ([-1, 1]); rescale to [0, 1] for visualisation
+        gen_imgs = (gen_imgs + 1) / 2
 
         for logger in self.trainer.logger:
             if type(logger).__name__ == "WandbLogger":
-                # TODO: log fake images to wandb (https://docs.wandb.ai/guides/track/log/media)
-                #     : replace `None` with your wandb Image object
-                logger.experiment.log({"gen_imgs": None})
+                logger.experiment.log({
+                    "gen_imgs": [
+                        wandb.Image(img, caption=str(label.item()))
+                        for img, label in zip(gen_imgs, labels)
+                    ]
+                })

@@ -1,0 +1,2 @@
+- experiment=train_mnist_gan.yaml
+- trainer.gpus=0

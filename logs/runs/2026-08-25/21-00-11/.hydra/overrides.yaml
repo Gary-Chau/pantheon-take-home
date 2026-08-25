@@ -1,0 +1,5 @@
+- experiment=train_mnist_gan.yaml
+- trainer.gpus=0
+- +trainer.fast_dev_run=true
+- logger=csv
+- print_config=false
