@@ -108,13 +108,6 @@ Everything was added as new, additive components (no existing MNIST files were c
 | **`CIFAR10GANModel`** (`src/models/cifar10_gan_model.py`) | Subclasses `MNISTGANModel` — inherits the alternating-optimisation `step()` logic unchanged; overrides `validation_step` to additionally track a `torchmetrics.Accuracy(task="binary")` discriminator accuracy metric, and overrides `on_epoch_end` for RGB-aware grid logging |
 | **Hydra configs** | New `configs/model/cifar10_gan_model.yaml`, `configs/datamodule/cifar10_datamodule.yaml`, `configs/experiment/train_cifar10_gan.yaml` — run with `python run.py experiment=train_cifar10_gan.yaml` |
 
-### Why `torchmetrics`?
-
-Loss values alone don't tell you whether the discriminator is actually distinguishing real from fake — an `MSELoss` value can look "reasonable" while the discriminator is essentially guessing. `Accuracy(task="binary")` gives a directly interpretable number: the fraction of real+fake images the discriminator classifies correctly each validation epoch, logged as `val/disc_acc`.
-
-### AI Suggestion Corrected
-
-`torchmetrics.Accuracy()` (no arguments) was the first attempt, following the same pattern as older PyTorch-Lightning tutorials the AI had seen. The installed `torchmetrics==0.11.4` raised a deprecation/type error because the argument-less binary API was removed — it now requires an explicit `task="binary"`. Corrected to `Accuracy(task="binary")` after checking the installed version directly with `python -c "import torchmetrics; print(torchmetrics.__version__)"` rather than assuming.
 
 ### Results — 30-Epoch Run (RTX 5060 Ti)
 
@@ -138,6 +131,77 @@ The very low `train/d_loss` (0.018) vs. much higher `val/d_loss` (0.206) shows t
 | ![cifar_gen_early](./images/cifar_gen_early.png) | ![cifar_gen_mid](./images/cifar_gen_mid.png) | ![cifar_gen_final](./images/cifar_gen_final.png) |
 
 At epoch 0 the generator outputs pure colour noise (no structure). By mid-training, blurry blob-like shapes with plausible colour distributions (greens, blues, browns) start to emerge. By the final epoch, recognisable coarse silhouettes of vehicles and animals appear against varied backgrounds — a reasonable result for a simple DCGAN trained on CPU/consumer GPU for 30 epochs; sharper detail would need more capacity, more epochs, and techniques like spectral normalisation or a stronger loss (e.g. WGAN-GP).
+
+---
+
+## Part 3 — Chatbot Assignment: Local LLM Comparison
+
+Three local instruction-tuned models were compared through Ollama using CPU-only inference (`num_gpu: 0`):
+
+- Llama 3.2 (3B)
+- Mistral (7B)
+- Qwen3 (4B)
+
+The Hydra-driven test harness ran the same eight prompts against each model and saved the complete prompts, parameters, unedited responses, and timing metadata as individual JSON files under [`chatbot_comparison/result/raw`](./chatbot_comparison/result/raw). The results were then aggregated into [`llm_comparison.xlsx`](./chatbot_comparison/result/llm_comparison.xlsx).
+
+### Comparison
+
+| Dimension | Llama 3.2 (3B) | Mistral (7B) | Qwen3 (4B) |
+|-----------|-----------------|--------------|-------------|
+| **Content quality** | Misread “all but 9 die” as 9 deaths and returned **32** | Made the same parsing error and returned **32** | Correctly reasoned that 9 remain and the total becomes **36**, but hit the token limit before presenting a concise final answer |
+| **Context retention** | Retained the peanut/shellfish constraint and addressed Alex by name; 158 words | Retained the constraint and was most concise; 94 words | Retained the constraint, but buried the answer in approximately 268 words of planning |
+| **Language fluency** | Vivid, readable prose | Most polished phrasing, including “a siren's song that pierced the storm's symphony” | Returned planning notes instead of the requested story, including “Word count alert: Draft is 187 words” |
+| **Ethical reasoning** | Considered multiple perspectives with a utilitarian leaning | Most structured response; explicitly organised the issue around three ethical frameworks | Identified relevant trade-offs but spent the full output budget planning and was cut off before a conclusion |
+| **Average length / speed** | 107 words; **14.3 tokens/s** (fastest) | 97 words; **6.0 tokens/s** (slowest) | 287 words; **9.1 tokens/s** |
+
+The riddle result is especially instructive: shorter output did not guarantee correctness. Llama and Mistral confidently mishandled the phrase “all but 9,” whereas Qwen reached the correct calculation but failed to package it into a completed answer.
+
+### Main Takeaway
+
+Llama and Mistral were generally concise and usable, with Mistral producing the strongest prose and most structured ethical discussion. However, both failed the factual riddle. Qwen showed useful intermediate reasoning and reached the correct riddle calculation, but repeatedly exposed chain-of-thought-style planning in its visible response. This verbosity caused it to violate output formats and reach the 400-token limit before completing several tasks.
+
+Although the Ollama request recorded `think: false` for Qwen, the model still emitted planning text and even a stray `</think>` marker. Therefore, this behaviour is described as **visible reasoning leakage**, not enabled hidden thinking.
+
+### Generation Parameters
+
+- **Temperature:** Llama used `0.2`, while Mistral and Qwen used `0.7`. Lower temperature generally produces more deterministic, conservative output; higher temperature permits more varied phrasing. Because this parameter was not held constant, the comparison is observational rather than a perfectly controlled model-only benchmark.
+- **`top_p: 0.9`:** limited sampling to tokens within the top 90% cumulative probability mass.
+- **`top_k: 40`:** limited each sampling step to the 40 most probable candidate tokens.
+- **`num_predict: 400`:** imposed a hard output-token cap. Qwen reached this limit repeatedly, causing incomplete or mid-sentence responses.
+- **`think: false`:** explicitly requested non-thinking output. Llama and Mistral responded normally; Qwen still produced visible planning text.
+- **`seed: 42`:** fixed to improve reproducibility.
+- **`num_gpu: 0`:** forced all models to run locally on CPU.
+
+### Prompt-Engineering Techniques
+
+**Template-based prompting.** The prompt supplied an exact JSON template. Llama and Mistral immediately returned valid structured data. Qwen repeatedly reconsidered whether the placeholder `null` should remain unchanged and exhausted its output budget without producing the JSON. Templates are easy to validate automatically, but only when the model obeys the requested output boundary.
+
+**Rule-based prompting.** The prompt required exactly three bullets, at most ten words each, with different first words. Llama and Mistral followed the constraints cleanly. Qwen began analysing the rules instead of directly applying them and was truncated. Explicit rules make compliance measurable, but verbose reasoning can prevent the model from reaching the requested answer.
+
+**Few-shot prompting.** Three labelled sentiment examples established the task and expected one-word output. Llama returned the required single label. Mistral selected a label but added an explanation, violating the format. Qwen analysed the mixed sentiment at length and never reached its final label. Few-shot examples improve task understanding, but do not guarantee format compliance.
+
+Overall, template- and rule-based prompts were precise and easy to score, but brittle when a model exposed long reasoning traces. Few-shot prompting encouraged more nuanced interpretation, yet still required strict output controls.
+
+### Retrieval-Augmented Generation (RAG)
+
+RAG combines two stages:
+
+1. A **retriever** searches an external knowledge source for passages relevant to the user's query.
+2. A **generator** receives those passages as context and produces an answer grounded in the retrieved evidence.
+
+This reduces reliance on model memory, allows answers to use private or current information, and makes hallucinations easier to control. The test simulated the generation stage by injecting a fabricated passage about Pantheon Lab's GPU cluster, then instructing each model to answer using only that passage.
+
+Llama and Mistral correctly extracted both facts: **12 NVIDIA A100 GPUs**, reserved through the **`#gpu-booking` Slack bot**. Qwen also identified both facts in its planning, but its visible final answer was truncated after “There are 1,” again demonstrating that correct internal extraction is not enough when output control fails.
+
+### Quantitative Visualisation
+
+| Response length | CPU generation speed |
+|:-:|:-:|
+| ![Average response length](./chatbot_comparison/result/charts/avg_response_length.png) | ![Average tokens per second](./chatbot_comparison/result/charts/avg_tokens_per_second.png) |
+
+| Total response time | Length by task |
+|:-:|:-:|
+| ![Average total duration](./chatbot_comparison/result/charts/avg_total_duration.png) | ![Response length by task](./chatbot_comparison/result/charts/response_length_by_task.png) |
 
 ---
 
