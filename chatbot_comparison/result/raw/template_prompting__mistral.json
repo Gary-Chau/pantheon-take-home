@@ -1,0 +1,38 @@
+{
+  "task_id": "template_prompting",
+  "category": "Prompt Engineering - Template-Based",
+  "technique_notes": "Template-based prompting: the exact JSON schema to fill in is given verbatim. Checks instruction-following and structured-output reliability.",
+  "model_tag": "mistral:7b",
+  "model_family": "Mistral",
+  "model_display_name": "Mistral (7B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You output ONLY valid JSON matching the exact schema given. No prose, no markdown fences."
+    },
+    {
+      "role": "user",
+      "content": "Extract structured data from this text into the following JSON template:\n{\"name\": \"\", \"age\": null, \"occupation\": \"\", \"city\": \"\"}\n\nText: \"Maria Gonzalez, a 34-year-old software engineer living in Austin, just started a new job.\""
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": " {\n  \"name\": \"Maria Gonzalez\",\n  \"age\": 34,\n  \"occupation\": \"software engineer\",\n  \"city\": \"Austin\"\n}",
+  "timestamp_utc": "2026-08-26T14:56:05.791210+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 9491249600,
+    "load_duration_ns": 1046800,
+    "prompt_eval_count": 92,
+    "prompt_eval_duration_ns": 1772653000,
+    "eval_count": 47,
+    "eval_duration_ns": 7694733000,
+    "wall_clock_seconds": 11.763340711593628
+  },
+  "error": null
+}

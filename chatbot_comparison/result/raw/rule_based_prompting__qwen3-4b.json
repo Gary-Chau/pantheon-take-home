@@ -1,0 +1,39 @@
+{
+  "task_id": "rule_based_prompting",
+  "category": "Prompt Engineering - Rule-Based",
+  "technique_notes": "Rule-based prompting: explicit, checkable formatting rules (bullet count, word limit, no repeated leading words). Checks constraint compliance.",
+  "model_tag": "qwen3:4b",
+  "model_family": "Qwen",
+  "model_display_name": "Qwen3 (4B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Follow these rules strictly: (1) Respond in exactly 3 bullet points. (2) Each bullet must be 10 words or fewer. (3) No bullet may start with the same word as another."
+    },
+    {
+      "role": "user",
+      "content": "Explain why regular exercise is beneficial for health."
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "think": false,
+  "response": "Hmm, the user wants me to explain why regular exercise is beneficial for health, but with very specific constraints. I need to respond in exactly three bullet points, each with no more than 10 words, and no two bullets can start with the same word. That's quite precise!\n\nFirst, I should recall the key health benefits of exercise. From what I know, regular physical activity helps with cardiovascular health, weight management, mental health, and reducing chronic disease risks. I need to distill this into three concise points that fit the word limit.\n\nLet me brainstorm some ideas: One point could be about heart health - like \"Strengthens heart and blood vessels.\" That's 5 words. Another could be weight control: \"Controls weight and body fat levels.\" That's 5 words. For mental health: \"Reduces stress and anxiety symptoms.\" That's : 5 words. But I have to check the starting words: \"Strengthens,\" \"Controls,\" \"Reduces\" - all different, so that works.\n\nWait, the user might be a student or someone health-conscious looking for quick facts. They specified strict rules, so they probably want accuracy without fluff. Deeper needs could include preventing health issues or boosting motivation for exercise, so I'll focus on clear, evidence-based benefits.\n\nI'll refine the points to be under 10 words each. First bullet: \"Boosts heart health and circulation.\" That's 5 words. Second: \"Manages weight and body composition.\" 5 words. Third: \"Lowers risk of chronic diseases.\" 4 words. Starting words: \"Boosts,\" \"Manages,\" \"Lowers\" - all unique. Perfect.\n\nDouble-checking: Each bullet is ≤10 words? Yes. No starting word repeats? Yes. Covers key benefits without overlap. This should satisfy the query while being helpful and compliant.\n</think>\n\n- Boosts heart health and circulation\n- Manages weight and body composition\n",
+  "timestamp_utc": "2026-08-26T15:04:59.566916+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 41408933700,
+    "load_duration_ns": 1001800,
+    "prompt_eval_count": 69,
+    "prompt_eval_duration_ns": 701019000,
+    "eval_count": 400,
+    "eval_duration_ns": 40673715000,
+    "wall_clock_seconds": 43.81545448303223
+  },
+  "error": null
+}

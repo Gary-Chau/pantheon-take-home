@@ -1,0 +1,38 @@
+{
+  "task_id": "few_shot_prompting",
+  "category": "Prompt Engineering - Few-Shot (ML-based)",
+  "technique_notes": "Few-shot / in-context learning: 3 labelled examples establish the task and output format before an ambiguous, mixed-sentiment review is presented, checking nuanced generalisation from the examples.",
+  "model_tag": "llama3.2",
+  "model_family": "Llama",
+  "model_display_name": "Llama 3.2 (3B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a sentiment classifier. Reply with exactly one word: Positive, Negative, or Neutral."
+    },
+    {
+      "role": "user",
+      "content": "Classify the sentiment of the following reviews based on these examples:\n\nReview: \"This product broke after one day, total waste of money.\"\nSentiment: Negative\n\nReview: \"It works fine, nothing special but does the job.\"\nSentiment: Neutral\n\nReview: \"Absolutely love it, best purchase I've made all year!\"\nSentiment: Positive\n\nReview: \"The battery life is shorter than advertised but customer service was helpful in resolving it.\"\nSentiment:"
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.2,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": "Positive",
+  "timestamp_utc": "2026-08-26T14:45:33.383898+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 1081678800,
+    "load_duration_ns": 1001200,
+    "prompt_eval_count": 138,
+    "prompt_eval_duration_ns": 994237000,
+    "eval_count": 2,
+    "eval_duration_ns": 80244000,
+    "wall_clock_seconds": 3.122130870819092
+  },
+  "error": null
+}

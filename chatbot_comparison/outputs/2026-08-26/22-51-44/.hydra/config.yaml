@@ -1,0 +1,164 @@
+ollama:
+  host: http://localhost:11434
+  timeout_seconds: 900
+generation:
+  temperature: 0.7
+  top_p: 0.9
+  top_k: 40
+  num_predict: 400
+  seed: 42
+  num_gpu: 0
+models:
+- tag: llama3.2
+  family: Llama
+  display_name: Llama 3.2 (3B)
+- tag: qwen3:4b
+  family: Qwen
+  display_name: Qwen3 (4B)
+- tag: mistral:7b
+  family: Mistral
+  display_name: Mistral (7B)
+tasks:
+- id: factual_reasoning
+  category: Content Quality
+  technique_notes: Two-step arithmetic/logic riddle. Checks factual correctness and
+    whether the model shows/short-circuits reasoning before answering.
+  messages:
+  - role: system
+    content: You are a helpful, precise assistant. Answer accurately and show your
+      reasoning briefly before giving the final answer.
+  - role: user
+    content: A farmer has 17 sheep. All but 9 die. How many sheep does the farmer
+      have left? Then, if the farmer buys 3 times as many sheep as remain, how many
+      sheep will the farmer have in total?
+- id: contextual_understanding
+  category: Contextual Understanding
+  technique_notes: Multi-turn history with a constraint (allergies) stated early.
+    The same simulated assistant turn 1 is reused for every model so only the final
+    turn differs, testing whether the model actually attends to the earlier user message
+    rather than ignoring context.
+  messages:
+  - role: system
+    content: You are a helpful assistant with a good memory for conversation context.
+  - role: user
+    content: My name is Alex and I'm allergic to peanuts and shellfish. I'm planning
+      a dinner party for 6 people this weekend.
+  - role: assistant
+    content: Got it, Alex! I'll keep your peanut and shellfish allergies in mind.
+      What kind of menu are you thinking for your dinner party?
+  - role: user
+    content: Can you suggest a 3-course menu for the party? Make sure it's safe for
+      me to eat too.
+- id: creative_writing
+  category: Language Fluency
+  technique_notes: Open-ended creative-writing prompt with a length constraint and
+    a style instruction, to compare fluency, vocabulary, and coherence.
+  messages:
+  - role: system
+    content: You are a creative writing assistant with an elegant, vivid writing style.
+  - role: user
+    content: Write a 150-200 word short story about a lighthouse keeper who discovers
+      something unusual during a storm. Use vivid sensory imagery.
+- id: ethical_dilemma
+  category: Ethical Considerations
+  technique_notes: Classic trolley-problem variant (self-driving car). Checks whether
+    the model reasons about trade-offs with nuance, presents multiple perspectives,
+    and avoids either refusing entirely or giving a glib one-line answer to a genuinely
+    hard ethical question.
+  messages:
+  - role: system
+    content: You are a thoughtful assistant that reasons carefully about ethical questions
+      and explains multiple perspectives.
+  - role: user
+    content: A self-driving car's brakes fail. It must choose between swerving to
+      hit one pedestrian who jaywalked, or continuing straight and hitting five pedestrians
+      who are crossing legally. What should the car be programmed to do, and why?
+      Discuss the ethical trade-offs.
+- id: template_prompting
+  category: Prompt Engineering - Template-Based
+  technique_notes: 'Template-based prompting: the exact JSON schema to fill in is
+    given verbatim. Checks instruction-following and structured-output reliability.'
+  messages:
+  - role: system
+    content: You output ONLY valid JSON matching the exact schema given. No prose,
+      no markdown fences.
+  - role: user
+    content: 'Extract structured data from this text into the following JSON template:
+
+      {"name": "", "age": null, "occupation": "", "city": ""}
+
+
+      Text: "Maria Gonzalez, a 34-year-old software engineer living in Austin, just
+      started a new job."'
+- id: rule_based_prompting
+  category: Prompt Engineering - Rule-Based
+  technique_notes: 'Rule-based prompting: explicit, checkable formatting rules (bullet
+    count, word limit, no repeated leading words). Checks constraint compliance.'
+  messages:
+  - role: system
+    content: 'Follow these rules strictly: (1) Respond in exactly 3 bullet points.
+      (2) Each bullet must be 10 words or fewer. (3) No bullet may start with the
+      same word as another.'
+  - role: user
+    content: Explain why regular exercise is beneficial for health.
+- id: few_shot_prompting
+  category: Prompt Engineering - Few-Shot (ML-based)
+  technique_notes: 'Few-shot / in-context learning: 3 labelled examples establish
+    the task and output format before an ambiguous, mixed-sentiment review is presented,
+    checking nuanced generalisation from the examples.'
+  messages:
+  - role: system
+    content: 'You are a sentiment classifier. Reply with exactly one word: Positive,
+      Negative, or Neutral.'
+  - role: user
+    content: 'Classify the sentiment of the following reviews based on these examples:
+
+
+      Review: "This product broke after one day, total waste of money."
+
+      Sentiment: Negative
+
+
+      Review: "It works fine, nothing special but does the job."
+
+      Sentiment: Neutral
+
+
+      Review: "Absolutely love it, best purchase I''ve made all year!"
+
+      Sentiment: Positive
+
+
+      Review: "The battery life is shorter than advertised but customer service was
+      helpful in resolving it."
+
+      Sentiment:'
+- id: rag_demo
+  category: RAG (Retrieval-Augmented Generation)
+  technique_notes: 'Simulates a RAG pipeline''s final generation step: a ''retrieved''
+    passage containing fabricated facts (not in any model''s training data) is injected
+    into the prompt, so a correct answer can only come from grounding in the provided
+    context rather than from prior knowledge or hallucination.'
+  messages:
+  - role: system
+    content: Answer the question using ONLY the information in the provided context.
+      If the answer is not in the context, say "I cannot find this in the provided
+      context."
+  - role: user
+    content: 'Context:
+
+      "The Pantheon Lab office relocated to 88 Queensway, Hong Kong in March 2024.
+      The new office features a dedicated GPU cluster room with 12 NVIDIA A100 GPUs,
+      used primarily for internal research on generative models. Employees can book
+      cluster time through the internal Slack bot #gpu-booking."
+
+
+      Question: How many GPUs are in Pantheon Lab''s cluster room, and how do employees
+      reserve time on them?'
+work_dir: ${hydra:runtime.cwd}
+result_dir: ${work_dir}/result
+raw_result_dir: ${result_dir}/raw
+charts_dir: ${result_dir}/charts
+excel_output_path: ${result_dir}/llm_comparison.xlsx
+dry_run: true
+skip_successful: true

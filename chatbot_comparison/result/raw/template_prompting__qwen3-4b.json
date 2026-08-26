@@ -1,0 +1,39 @@
+{
+  "task_id": "template_prompting",
+  "category": "Prompt Engineering - Template-Based",
+  "technique_notes": "Template-based prompting: the exact JSON schema to fill in is given verbatim. Checks instruction-following and structured-output reliability.",
+  "model_tag": "qwen3:4b",
+  "model_family": "Qwen",
+  "model_display_name": "Qwen3 (4B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You output ONLY valid JSON matching the exact schema given. No prose, no markdown fences."
+    },
+    {
+      "role": "user",
+      "content": "Extract structured data from this text into the following JSON template:\n{\"name\": \"\", \"age\": null, \"occupation\": \"\", \"city\": \"\"}\n\nText: \"Maria Gonzalez, a 34-year-old software engineer living in Austin, just started a new job.\""
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "think": false,
+  "response": "Okay, let's tackle this problem. So, I need to extract structured data from the given text into a specific JSON template. The JSON should have name, age (which can be null), occupation, and city. The text provided is: \"Maria Gonzalez, a 34-year-old software engineer living in Austin, just started a new job.\"\n\nFirst, I'll read through the text to identify the relevant pieces of information. Let's break it down sentence by sentence.\n\nThe text starts with \"Maria Gonzalez,\" which is clearly the name. So name should be \"Maria Gonzalez\".\n\nNext, there's \"a 34-year-old software engineer\". The age here is 34. So age should be 34. But wait, the JSON template says age is null. Wait, no—the template says \"age\": null, but in the example, they might mean that it's a number, but the problem says to fill in the template. Wait, the user says \"Extract structured data... into the following JSON template: { \"name\": \"\", \"age\": null, \"occupation\": \"\", \"city\": \"\" }\". Wait, but in the template, age is specified as null, but that's probably a typo. Wait, no—the user says to extract into that template. Wait, the user's instruction says: \"Extract structured data from this text into the following JSON template: { \"name\": \"\", \"age\": null, \"occupation\": \"\", \"city\": \"\" }\".\n\nWait, maybe the template has age as null by default, but in reality, we need to extract the age as a number. Wait, but the problem says to output only valid JSON matching the exact schema given. Wait, the user says \"output ONLY valid JSON matching the exact schema given\". The schema here is {\"name\": \"\", \"age\": null, \"occupation\": \"\", \"city\": \"\"}. Wait, but in JSON, the schema for age is null, but in the",
+  "timestamp_utc": "2026-08-26T15:04:15.744717+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 42066209700,
+    "load_duration_ns": 1580700,
+    "prompt_eval_count": 87,
+    "prompt_eval_duration_ns": 886987000,
+    "eval_count": 400,
+    "eval_duration_ns": 41151678000,
+    "wall_clock_seconds": 44.12904691696167
+  },
+  "error": null
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": "rag_demo",
+  "category": "RAG (Retrieval-Augmented Generation)",
+  "technique_notes": "Simulates a RAG pipeline's final generation step: a 'retrieved' passage containing fabricated facts (not in any model's training data) is injected into the prompt, so a correct answer can only come from grounding in the provided context rather than from prior knowledge or hallucination.",
+  "model_tag": "mistral:7b",
+  "model_family": "Mistral",
+  "model_display_name": "Mistral (7B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Answer the question using ONLY the information in the provided context. If the answer is not in the context, say \"I cannot find this in the provided context.\""
+    },
+    {
+      "role": "user",
+      "content": "Context:\n\"The Pantheon Lab office relocated to 88 Queensway, Hong Kong in March 2024. The new office features a dedicated GPU cluster room with 12 NVIDIA A100 GPUs, used primarily for internal research on generative models. Employees can book cluster time through the internal Slack bot #gpu-booking.\"\n\nQuestion: How many GPUs are in Pantheon Lab's cluster room, and how do employees reserve time on them?"
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": " The Pantheon Lab's cluster room has 12 NVIDIA A100 GPUs. Employees can reserve time on them by booking through the internal Slack bot #gpu-booking.",
+  "timestamp_utc": "2026-08-26T14:56:33.856263+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 10974255700,
+    "load_duration_ns": 1055000,
+    "prompt_eval_count": 151,
+    "prompt_eval_duration_ns": 2992839000,
+    "eval_count": 47,
+    "eval_duration_ns": 7971446000,
+    "wall_clock_seconds": 13.028124570846558
+  },
+  "error": null
+}

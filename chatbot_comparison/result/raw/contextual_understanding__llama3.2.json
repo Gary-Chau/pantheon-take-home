@@ -1,0 +1,46 @@
+{
+  "task_id": "contextual_understanding",
+  "category": "Contextual Understanding",
+  "technique_notes": "Multi-turn history with a constraint (allergies) stated early. The same simulated assistant turn 1 is reused for every model so only the final turn differs, testing whether the model actually attends to the earlier user message rather than ignoring context.",
+  "model_tag": "llama3.2",
+  "model_family": "Llama",
+  "model_display_name": "Llama 3.2 (3B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant with a good memory for conversation context."
+    },
+    {
+      "role": "user",
+      "content": "My name is Alex and I'm allergic to peanuts and shellfish. I'm planning a dinner party for 6 people this weekend."
+    },
+    {
+      "role": "assistant",
+      "content": "Got it, Alex! I'll keep your peanut and shellfish allergies in mind. What kind of menu are you thinking for your dinner party?"
+    },
+    {
+      "role": "user",
+      "content": "Can you suggest a 3-course menu for the party? Make sure it's safe for me to eat too."
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.2,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": "Considering your allergies, I'd be happy to suggest a 3-course menu for your dinner party. Here's a proposal:\n\n**Course 1: Appetizer**\nGrilled Vegetable Skewers with a Balsamic Glaze and Fresh Fruit Salad. This option is free from peanuts and shellfish, and features a variety of colorful vegetables that are sure to please.\n\n**Course 2: Main Course**\nHerbed Crusted Chicken Breast with Roasted Vegetables and Quinoa. This dish avoids common allergens and features a flavorful herb crust that's sure to impress. You can also offer a side of gluten-free bread or crackers for those who may have other dietary restrictions.\n\n**Course 3: Dessert**\nFresh Fruit Tart with Whipped Cream. This sweet treat is peanut-free and shellfish-free, and features a variety of fresh fruits that are sure to satisfy any sweet tooth.\n\nOf course, I can always adjust the menu to accommodate any other dietary needs or preferences your guests may have. What do you think of this proposal, Alex?",
+  "timestamp_utc": "2026-08-26T14:40:39.844096+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 18039212500,
+    "load_duration_ns": 1574800,
+    "prompt_eval_count": 127,
+    "prompt_eval_duration_ns": 917723000,
+    "eval_count": 212,
+    "eval_duration_ns": 17108776000,
+    "wall_clock_seconds": 20.085078477859497
+  },
+  "error": null
+}

@@ -1,0 +1,9 @@
+# Fixed generation parameters applied identically to every model/task so that
+# differences in output are attributable to the model, not the settings.
+
+temperature: 0.7 # sampling randomness: 0 = deterministic, 1 = more random/creative
+top_p: 0.9 # nucleus sampling: only sample from the top 90% probability mass
+top_k: 40 # only consider the 40 most likely next tokens at each step
+num_predict: 400 # max tokens to generate per response
+seed: 42 # fixed seed for as much reproducibility as the backend allows
+num_gpu: 0 # force CPU-only execution, no GPU required

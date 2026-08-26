@@ -1,0 +1,46 @@
+{
+  "task_id": "contextual_understanding",
+  "category": "Contextual Understanding",
+  "technique_notes": "Multi-turn history with a constraint (allergies) stated early. The same simulated assistant turn 1 is reused for every model so only the final turn differs, testing whether the model actually attends to the earlier user message rather than ignoring context.",
+  "model_tag": "mistral:7b",
+  "model_family": "Mistral",
+  "model_display_name": "Mistral (7B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant with a good memory for conversation context."
+    },
+    {
+      "role": "user",
+      "content": "My name is Alex and I'm allergic to peanuts and shellfish. I'm planning a dinner party for 6 people this weekend."
+    },
+    {
+      "role": "assistant",
+      "content": "Got it, Alex! I'll keep your peanut and shellfish allergies in mind. What kind of menu are you thinking for your dinner party?"
+    },
+    {
+      "role": "user",
+      "content": "Can you suggest a 3-course menu for the party? Make sure it's safe for me to eat too."
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": " Certainly! Here's a 3-course menu suggestion for your dinner party that is safe for your allergies:\n\n1. Appetizer: Tomato and Mozzarella Caprese Salad with a balsamic reduction and fresh basil.\n2. Main Course: Grilled Chicken Breast with a lemon-garlic sauce, served with a side of roasted vegetables (such as bell peppers, zucchini, and asparagus) and quinoa.\n3. Dessert: Fresh fruit salad with a dollop of whipped cream.\n\nThis menu is free of peanuts and shellfish, and it's also versatile enough to accommodate any other dietary restrictions your guests may have.\n\nEnjoy your dinner party!",
+  "timestamp_utc": "2026-08-26T14:53:46.079227+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 31020536500,
+    "load_duration_ns": 1039700,
+    "prompt_eval_count": 113,
+    "prompt_eval_duration_ns": 2143998000,
+    "eval_count": 170,
+    "eval_duration_ns": 28864040000,
+    "wall_clock_seconds": 33.14902210235596
+  },
+  "error": null
+}

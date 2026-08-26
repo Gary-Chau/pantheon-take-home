@@ -1,0 +1,39 @@
+{
+  "task_id": "few_shot_prompting",
+  "category": "Prompt Engineering - Few-Shot (ML-based)",
+  "technique_notes": "Few-shot / in-context learning: 3 labelled examples establish the task and output format before an ambiguous, mixed-sentiment review is presented, checking nuanced generalisation from the examples.",
+  "model_tag": "qwen3:4b",
+  "model_family": "Qwen",
+  "model_display_name": "Qwen3 (4B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a sentiment classifier. Reply with exactly one word: Positive, Negative, or Neutral."
+    },
+    {
+      "role": "user",
+      "content": "Classify the sentiment of the following reviews based on these examples:\n\nReview: \"This product broke after one day, total waste of money.\"\nSentiment: Negative\n\nReview: \"It works fine, nothing special but does the job.\"\nSentiment: Neutral\n\nReview: \"Absolutely love it, best purchase I've made all year!\"\nSentiment: Positive\n\nReview: \"The battery life is shorter than advertised but customer service was helpful in resolving it.\"\nSentiment:"
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "think": false,
+  "response": "First, the user wants me to classify the sentiment of a new review based on the examples provided. The examples are:\n\n- Review: \"This product broke after one day, total waste of money.\" Sentiment: Negative\n\n- Review: \"It works fine, nothing special but does the job.\" Sentiment: Neutral\n\n- Review:: \"Absolutely love it, best purchase I've made all year!\" Sentiment: Positive\n\nNow, the review to classify is: \"The battery life is shorter than advertised but customer service was helpful in resolving it.\"\n\nI need to figure out the sentiment for this review. Sentiment can be Positive, Negative, or Neutral.\n\nLet me break down the review:\n\n- \"The battery life is shorter than advertised\" – This is a negative point because the product isn't meeting expectations (battery life is worse than promised).\n\n- \"but customer service was helpful in resolving it\" – This is a positive point because customer service handled the issue well.\n\nSo, the review has both positive and negative elements. It's not purely positive or purely negative; it's a mix.\n\nI should look at the examples to see how they handled similar cases.\n\nIn the examples:\n\n- The first one is clearly negative: it broke quickly and is a waste of money.\n\n- The second one is neutral: it works but isn't special, so it's functional but not enthusiastic.\n\n- The third one is positive: very enthusiastic.\n\nFor the new review, it has a negative aspect (battery life) but a positive aspect (customer service). The key is to see if the overall sentiment is positive, negative, or neutral.\n\nIn sentiment classification, when there's a mix, it often depends on which part is more dominant or if the overall tone is balanced.\n\nHere, the negative part is about a product flaw, but the positive part is about customer service resolving it. The phrase \"but\" suggests a contrast, meaning that despite the negative, the positive aspect is helpful.\n\nThe",
+  "timestamp_utc": "2026-08-26T15:05:51.390635+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 49779478600,
+    "load_duration_ns": 1050300,
+    "prompt_eval_count": 128,
+    "prompt_eval_duration_ns": 1301266000,
+    "eval_count": 400,
+    "eval_duration_ns": 48450508000,
+    "wall_clock_seconds": 51.81689190864563
+  },
+  "error": null
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": "rule_based_prompting",
+  "category": "Prompt Engineering - Rule-Based",
+  "technique_notes": "Rule-based prompting: explicit, checkable formatting rules (bullet count, word limit, no repeated leading words). Checks constraint compliance.",
+  "model_tag": "llama3.2",
+  "model_family": "Llama",
+  "model_display_name": "Llama 3.2 (3B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Follow these rules strictly: (1) Respond in exactly 3 bullet points. (2) Each bullet must be 10 words or fewer. (3) No bullet may start with the same word as another."
+    },
+    {
+      "role": "user",
+      "content": "Explain why regular exercise is beneficial for health."
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.2,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": "• Regular exercise boosts cardiovascular health and reduces risk.\n• Physical activity improves mental well-being and reduces stress levels.\n• Exercise helps maintain healthy weight and strong bones naturally.",
+  "timestamp_utc": "2026-08-26T14:44:55.460365+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 3316244200,
+    "load_duration_ns": 1117900,
+    "prompt_eval_count": 78,
+    "prompt_eval_duration_ns": 538139000,
+    "eval_count": 34,
+    "eval_duration_ns": 2770960000,
+    "wall_clock_seconds": 5.362612009048462
+  },
+  "error": null
+}

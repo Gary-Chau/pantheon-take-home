@@ -1,0 +1,38 @@
+{
+  "task_id": "template_prompting",
+  "category": "Prompt Engineering - Template-Based",
+  "technique_notes": "Template-based prompting: the exact JSON schema to fill in is given verbatim. Checks instruction-following and structured-output reliability.",
+  "model_tag": "llama3.2",
+  "model_family": "Llama",
+  "model_display_name": "Llama 3.2 (3B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You output ONLY valid JSON matching the exact schema given. No prose, no markdown fences."
+    },
+    {
+      "role": "user",
+      "content": "Extract structured data from this text into the following JSON template:\n{\"name\": \"\", \"age\": null, \"occupation\": \"\", \"city\": \"\"}\n\nText: \"Maria Gonzalez, a 34-year-old software engineer living in Austin, just started a new job.\""
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.2,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": "{\"name\": \"Maria Gonzalez\", \"age\": 34, \"occupation\": \"software engineer\", \"city\": \"Austin\"}",
+  "timestamp_utc": "2026-08-26T14:44:03.750136+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 2583067500,
+    "load_duration_ns": 2871000,
+    "prompt_eval_count": 96,
+    "prompt_eval_duration_ns": 624793000,
+    "eval_count": 27,
+    "eval_duration_ns": 1928521000,
+    "wall_clock_seconds": 4.614850044250488
+  },
+  "error": null
+}

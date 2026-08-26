@@ -1,0 +1,39 @@
+{
+  "task_id": "rag_demo",
+  "category": "RAG (Retrieval-Augmented Generation)",
+  "technique_notes": "Simulates a RAG pipeline's final generation step: a 'retrieved' passage containing fabricated facts (not in any model's training data) is injected into the prompt, so a correct answer can only come from grounding in the provided context rather than from prior knowledge or hallucination.",
+  "model_tag": "qwen3:4b",
+  "model_family": "Qwen",
+  "model_display_name": "Qwen3 (4B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Answer the question using ONLY the information in the provided context. If the answer is not in the context, say \"I cannot find this in the provided context.\""
+    },
+    {
+      "role": "user",
+      "content": "Context:\n\"The Pantheon Lab office relocated to 88 Queensway, Hong Kong in March 2024. The new office features a dedicated GPU cluster room with 12 NVIDIA A100 GPUs, used primarily for internal research on generative models. Employees can book cluster time through the internal Slack bot #gpu-booking.\"\n\nQuestion: How many GPUs are in Pantheon Lab's cluster room, and how do employees reserve time on them?"
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "think": false,
+  "response": "Hmm, the user is asking about Pantheon Lab's GPU cluster room. Let me check the context carefully.\n\nLooking at the context: \"The Pantheon Lab office relocated to 88 Queensway, Hong Kong in March 2. The new office features a dedicated GPU cluster room with 12 NVIDIA A100 GPUs, used primarily for internal research on generative models. Employees can book cluster time through the internal Slack bot #gpu-booking.\"\n\nOkay, so the context clearly states there are 12 NVIDIA A100 GPUs in the cluster room. For the reservation method, it says employees book cluster time through the internal Slack bot with the channel #gpu-booking.\n\nI need to make sure I'm only using the information from the context. The context doesn't mention anything else about GPU counts or booking procedures. The relocation date (March 2024) and location (88 Queensway, Hong Kong) seem irrelevant to the specific questions about GPU count and reservation method.\n\nThe user's question has two parts: \n1) How many GPUs? → Context says 12 NVIDIA A100 GPUs\n2) How do employees reserve time? → Context says through internal Slack bot #gpu-booking\n\nI should phrase the answer clearly and directly using only the context information. No need to add anything extra since the context provides complete answers to both questions.\n\nThe context mentions \"March 2\" but that's probably a typo for \"March 2024\" - I'll stick to the numbers given without correcting anything since the question doesn't ask about dates.\n\nFinal answer should be: 12 GPUs, booked via Slack bot #gpu-booking.\n</think>\n\nThe context states that Pantheon Lab's new office features \"a dedicated GPU cluster room with 12 NVIDIA A100 GPUs\" and that \"employees can book cluster time through the internal Slack bot #gpu-booking.\" \n\nTherefore:\n- There are 1",
+  "timestamp_utc": "2026-08-26T15:06:47.145941+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 53263606400,
+    "load_duration_ns": 1039100,
+    "prompt_eval_count": 140,
+    "prompt_eval_duration_ns": 1606058000,
+    "eval_count": 400,
+    "eval_duration_ns": 51622706000,
+    "wall_clock_seconds": 55.747304916381836
+  },
+  "error": null
+}

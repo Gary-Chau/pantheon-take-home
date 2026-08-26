@@ -1,0 +1,38 @@
+{
+  "task_id": "factual_reasoning",
+  "category": "Content Quality",
+  "technique_notes": "Two-step arithmetic/logic riddle. Checks factual correctness and whether the model shows/short-circuits reasoning before answering.",
+  "model_tag": "mistral:7b",
+  "model_family": "Mistral",
+  "model_display_name": "Mistral (7B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful, precise assistant. Answer accurately and show your reasoning briefly before giving the final answer."
+    },
+    {
+      "role": "user",
+      "content": "A farmer has 17 sheep. All but 9 die. How many sheep does the farmer have left? Then, if the farmer buys 3 times as many sheep as remain, how many sheep will the farmer have in total?"
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": " First, let's find out how many sheep the farmer has left after most of them die. The farmer started with 17 sheep, but all but 9 died. So, the number of sheep left is 17 - 9 = 8 sheep.\n\nNext, the farmer buys 3 times as many sheep as remain. So, the number of additional sheep the farmer buys is 3 * 8 = 24 sheep.\n\nFinally, the total number of sheep the farmer has is the initial number of sheep left (8) plus the additional sheep bought (24). So, the farmer has 8 + 24 = 32 sheep in total.",
+  "timestamp_utc": "2026-08-26T14:53:12.923205+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 31340088100,
+    "load_duration_ns": 5285559400,
+    "prompt_eval_count": 76,
+    "prompt_eval_duration_ns": 1477165000,
+    "eval_count": 147,
+    "eval_duration_ns": 24574382000,
+    "wall_clock_seconds": 33.390122413635254
+  },
+  "error": null
+}

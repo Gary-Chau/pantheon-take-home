@@ -1,0 +1,38 @@
+{
+  "task_id": "creative_writing",
+  "category": "Language Fluency",
+  "technique_notes": "Open-ended creative-writing prompt with a length constraint and a style instruction, to compare fluency, vocabulary, and coherence.",
+  "model_tag": "llama3.2",
+  "model_family": "Llama",
+  "model_display_name": "Llama 3.2 (3B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a creative writing assistant with an elegant, vivid writing style."
+    },
+    {
+      "role": "user",
+      "content": "Write a 150-200 word short story about a lighthouse keeper who discovers something unusual during a storm. Use vivid sensory imagery."
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.2,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": "As the tempest raged outside, Emilia huddled in the lighthouse's warm, golden light, the scent of salt and oil wafting through the air. The storm's fury was a symphony of crashing waves and howling wind, a cacophony that threatened to shatter the very foundations of the tower. But Emilia was no stranger to the wild sea's moods. She had tended this beacon for nigh on twenty years, and her eyes had grown accustomed to the darkness.\n\nAs the night wore on, the tempest's intensity only grew. The lantern's flame danced and flickered, casting eerie shadows on the walls. And then, in the midst of the chaos, Emilia saw it: a figure, standing at the edge of the rocky shore, its back to the lighthouse. The wind whipped its dark hair into a frenzy, and its white coat billowed like a ghostly sail. For a moment, Emilia's breath caught in her throat. Who – or what – was this apparition, braving the storm's fury? As she watched, transfixed, the figure vanished into the darkness, leaving Emilia with a question that would haunt her for the rest of the night: what secrets lay hidden in the storm's wild heart?",
+  "timestamp_utc": "2026-08-26T14:41:51.852895+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 22397081300,
+    "load_duration_ns": 1071000,
+    "prompt_eval_count": 66,
+    "prompt_eval_duration_ns": 412117000,
+    "eval_count": 262,
+    "eval_duration_ns": 21967626000,
+    "wall_clock_seconds": 24.81229829788208
+  },
+  "error": null
+}

@@ -1,0 +1,35 @@
+# Top-level Hydra config for the local LLM comparison (Chatbot Assignment).
+#
+# Run with:
+#   python run_comparison.py                  # run everything against Ollama
+#   python run_comparison.py dry_run=true      # preview planned calls, call nothing
+#   python aggregate_to_excel.py               # build result/llm_comparison.xlsx
+#   python visualize.py                        # build result/charts/*.png
+#
+# Override any value from the command line, e.g.:
+#   python run_comparison.py generation.temperature=0.2 models=default
+
+defaults:
+  - ollama: default
+  - generation: default
+  - models: default
+  - tasks: default
+  - _self_
+
+# Hydra changes the working directory per run; anchor result paths to the
+# original invocation directory so outputs always land in a fixed location
+# regardless of Hydra's own run folder (same pattern as the main project's
+# `work_dir: ${hydra:runtime.cwd}`).
+work_dir: ${hydra:runtime.cwd}
+
+result_dir: ${work_dir}/result
+raw_result_dir: ${result_dir}/raw
+charts_dir: ${result_dir}/charts
+excel_output_path: ${result_dir}/llm_comparison.xlsx
+
+# Set to true (or pass `dry_run=true` on the CLI) to print planned calls
+# without hitting the Ollama API.
+dry_run: false
+
+# On rerun, preserve successful JSON records and retry only missing/failed calls.
+skip_successful: true

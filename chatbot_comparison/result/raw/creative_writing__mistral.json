@@ -1,0 +1,38 @@
+{
+  "task_id": "creative_writing",
+  "category": "Language Fluency",
+  "technique_notes": "Open-ended creative-writing prompt with a length constraint and a style instruction, to compare fluency, vocabulary, and coherence.",
+  "model_tag": "mistral:7b",
+  "model_family": "Mistral",
+  "model_display_name": "Mistral (7B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a creative writing assistant with an elegant, vivid writing style."
+    },
+    {
+      "role": "user",
+      "content": "Write a 150-200 word short story about a lighthouse keeper who discovers something unusual during a storm. Use vivid sensory imagery."
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": " In the desolate expanse of the North Sea, where tempests lash the coastline with a fervor, stood a beacon of hope - the Cape Wrath Lighthouse. Its somber silhouette, a testament to the relentless struggle against the sea, was the solitary refuge for its keeper, Old Tom.\n\nOne stormy eve, as the moon hid behind a veil of turbid clouds, Old Tom was huddled within the lighthouse, his eyes locked on the storm's fury. The howling wind tore at the lighthouse, while the rain pelted against the windows like a thousand needles. Amid the cacophony, a peculiar sound echoed - a soft, mournful melody, a siren's song that pierced the storm's symphony.\n\nGathering his courage, Old Tom ventured forth into the tempest. The rain stung his skin, the wind tore at his coat, yet he pressed on, guided by the haunting melody. As the storm abated, he found a hollow, half-buried in the sand - a sea organ, its pipes played by the relentless waves.\n\nIn that moment, amid the chaos and the beauty of nature, Old Tom felt a profound connection to the ocean and its secrets. The lighthouse, the storm, and the sea organ became not just a symbol of his solitude, but a testament to the harmony between man and nature.",
+  "timestamp_utc": "2026-08-26T14:54:43.542958+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 55413162200,
+    "load_duration_ns": 526400,
+    "prompt_eval_count": 56,
+    "prompt_eval_duration_ns": 1067142000,
+    "eval_count": 327,
+    "eval_duration_ns": 54329304000,
+    "wall_clock_seconds": 57.45773100852966
+  },
+  "error": null
+}

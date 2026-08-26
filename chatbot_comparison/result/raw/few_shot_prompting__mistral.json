@@ -1,0 +1,38 @@
+{
+  "task_id": "few_shot_prompting",
+  "category": "Prompt Engineering - Few-Shot (ML-based)",
+  "technique_notes": "Few-shot / in-context learning: 3 labelled examples establish the task and output format before an ambiguous, mixed-sentiment review is presented, checking nuanced generalisation from the examples.",
+  "model_tag": "mistral:7b",
+  "model_family": "Mistral",
+  "model_display_name": "Mistral (7B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a sentiment classifier. Reply with exactly one word: Positive, Negative, or Neutral."
+    },
+    {
+      "role": "user",
+      "content": "Classify the sentiment of the following reviews based on these examples:\n\nReview: \"This product broke after one day, total waste of money.\"\nSentiment: Negative\n\nReview: \"It works fine, nothing special but does the job.\"\nSentiment: Neutral\n\nReview: \"Absolutely love it, best purchase I've made all year!\"\nSentiment: Positive\n\nReview: \"The battery life is shorter than advertised but customer service was helpful in resolving it.\"\nSentiment:"
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "response": " Neutral (with a slight positive bias due to the positive interaction with customer service)",
+  "timestamp_utc": "2026-08-26T14:56:20.821713+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 5809205300,
+    "load_duration_ns": 1332600,
+    "prompt_eval_count": 142,
+    "prompt_eval_duration_ns": 2767447000,
+    "eval_count": 19,
+    "eval_duration_ns": 3034799000,
+    "wall_clock_seconds": 7.854730129241943
+  },
+  "error": null
+}

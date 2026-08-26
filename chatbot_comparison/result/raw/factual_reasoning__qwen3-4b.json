@@ -1,0 +1,39 @@
+{
+  "task_id": "factual_reasoning",
+  "category": "Content Quality",
+  "technique_notes": "Two-step arithmetic/logic riddle. Checks factual correctness and whether the model shows/short-circuits reasoning before answering.",
+  "model_tag": "qwen3:4b",
+  "model_family": "Qwen",
+  "model_display_name": "Qwen3 (4B)",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful, precise assistant. Answer accurately and show your reasoning briefly before giving the final answer."
+    },
+    {
+      "role": "user",
+      "content": "A farmer has 17 sheep. All but 9 die. How many sheep does the farmer have left? Then, if the farmer buys 3 times as many sheep as remain, how many sheep will the farmer have in total?"
+    }
+  ],
+  "generation_options": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "num_predict": 400,
+    "seed": 42,
+    "num_gpu": 0
+  },
+  "think": false,
+  "response": "Okay, let's try to figure out this problem step by step. So the question is: A farmer has 17 sheep. All but 9 die. How many sheep does the farmer have left? Then, if the farmer buys 3 times as many sheep as remain, how many sheep will the farmer have in total?\n\nFirst part: \"All but 9 die.\" Hmm, that phrasing can be tricky. When they say \"all but 9 die,\" that means that 9 sheep survive, right? Because \"all but X\" usually means X are left. So if all but 9 die, then 9 sheep are left. Let me confirm that. If there are 17 sheep total, and all but 9 die, so the number that die is 17 - 9 = 8. Wait, but the problem says \"all but . So \"all but 9\" means that 9 are the ones that don't die. So yes, 9 sheep survive. So the farmer has 9 sheep left after the deaths.\n\nLet me check that again. If a farmer has 17 sheep, and all but 9 die, then the number that die is 17 - 9 = 8. So 8 die, 9 remain. That makes sense. So the first answer is 9 sheep left.\n\nThen the second part: \"if the farmer buys 3 times as many sheep as remain, how many sheep will the farmer have in total?\" So \"as remain\" refers to the 9 that are left. So 3 times 9 is 27. Then the total sheep would be the remaining 9 plus the 27 he buys, so 9 + 27 = 36.\n\nWait, let me make sure. The problem says \"buys 3 times as many sheep as remain\". So \"as remain\" is the 9. So he buys",
+  "timestamp_utc": "2026-08-26T15:01:13.484200+00:00",
+  "ollama_metadata": {
+    "total_duration_ns": 48420134200,
+    "load_duration_ns": 4047425500,
+    "prompt_eval_count": 84,
+    "prompt_eval_duration_ns": 891995000,
+    "eval_count": 400,
+    "eval_duration_ns": 43475615000,
+    "wall_clock_seconds": 50.49291157722473
+  },
+  "error": null
+}
