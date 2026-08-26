@@ -1,0 +1,4 @@
+- experiment=train_mnist_gan.yaml
+- +trainer.fast_dev_run=true
+- logger=csv
+- print_config=false

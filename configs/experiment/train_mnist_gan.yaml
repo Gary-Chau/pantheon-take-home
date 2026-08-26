@@ -17,7 +17,8 @@ seed: 12345
 
 trainer:
   gpus: 0
-  max_epochs: 10
+  max_epochs: 20
+  max_steps: -1  # no step ceiling; let max_epochs govern training length
 
 datamodule:
   batch_size: 64

@@ -2,7 +2,7 @@ model_checkpoint:
   _target_: pytorch_lightning.callbacks.ModelCheckpoint
   monitor: null
   dirpath: "ckpts"
-  filename: "{step:09d}"
-  every_n_train_steps: 10000
+  filename: "{epoch:03d}-{step:09d}"
+  every_n_train_steps: 1720  # ~1 checkpoint per epoch (ceil(55000/64) * 2 optimizers)
   save_top_k: -1
   save_last: True

@@ -4,6 +4,7 @@ import wandb
 import torch
 import torch.nn as nn
 from torch import Tensor
+from torchvision.utils import make_grid
 from pytorch_lightning import LightningModule
 
 
@@ -48,8 +49,9 @@ class MNISTGANModel(LightningModule):
         return None
 
     def test_step(self, batch, batch_idx) -> Union[Tensor, Dict[str, Any], None]:
-        # TODO: if you have time, try implementing a test step
-        raise NotImplementedError
+        log_dict, loss = self.step(batch, batch_idx)
+        self.log_dict({"/".join(("test", k)): v for k, v in log_dict.items()})
+        return None
 
     def step(self, batch, batch_idx, optimizer_idx=None) -> Tuple[Dict[str, Tensor], Optional[Tensor]]:
         imgs, labels = batch
@@ -93,12 +95,14 @@ class MNISTGANModel(LightningModule):
             d_loss = (d_real_loss + d_fake_loss) / 2
 
             log_dict["d_loss"] = d_loss
+            log_dict["d_real_loss"] = d_real_loss
+            log_dict["d_fake_loss"] = d_fake_loss
             loss = d_loss
 
         return log_dict, loss
 
     def on_epoch_end(self):
-        # Create one fake image per class (0-9)
+        # One sample per class (0-9), fixed for consistent visual comparison across epochs
         z = torch.randn(self.hparams.n_classes, self.hparams.latent_dim, device=self.device)
         labels = torch.arange(self.hparams.n_classes, device=self.device)
 
@@ -107,14 +111,20 @@ class MNISTGANModel(LightningModule):
             gen_imgs = self.generator(z, labels)
         self.generator.train()
 
-        # Generator outputs are Tanh-activated ([-1, 1]); rescale to [0, 1] for visualisation
+        # Rescale from Tanh output [-1, 1] to [0, 1] for visualisation
         gen_imgs = (gen_imgs + 1) / 2
+
+        # Arrange into a 2-row × 5-col grid (one cell per digit class)
+        grid = make_grid(gen_imgs, nrow=5, normalize=False)
 
         for logger in self.trainer.logger:
             if type(logger).__name__ == "WandbLogger":
-                logger.experiment.log({
-                    "gen_imgs": [
-                        wandb.Image(img, caption=str(label.item()))
-                        for img, label in zip(gen_imgs, labels)
-                    ]
-                })
+                logger.experiment.log(
+                    {
+                        "gen_imgs": wandb.Image(
+                            grid,
+                            caption=f"Epoch {self.current_epoch} | rows: 0-4, 5-9",
+                        )
+                    },
+                    step=self.current_epoch,
+                )

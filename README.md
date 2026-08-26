@@ -2,6 +2,94 @@
 
 # Pantheon Lab Programming Assignment
 
+</div>
+
+---
+
+## Part 1 — GAN MNIST: Observations & Implementation Notes
+
+### Environment Setup
+
+**Difficulty 1 — `jupyterlab` install failure**
+
+Running `pip install -r requirements.txt` on the provided `pantheon-py38` (Python 3.8) conda environment failed because `jupyterlab`'s build chain pulls in `puccinialin`, which requires Python ≥ 3.9:
+
+```
+ERROR: Could not find a version that satisfies the requirement puccinialin (from versions: none)
+ERROR: No matching distribution found for puccinialin
+```
+
+`jupyterlab` is not used anywhere in the codebase (no `.ipynb` notebooks, no code imports), so it was commented out in `requirements.txt`.
+
+**Difficulty 2 — SSL error when downloading MNIST**
+
+After fixing the install, `trainer.fit()` crashed during `MNISTDataModule.prepare_data()` with:
+
+```
+ssl.SSLError: [ASN1: NOT_ENOUGH_DATA] not enough data (_ssl.c:4194)
+```
+
+Python's `ssl` module on this Windows + conda 3.8 setup crashes while loading the system CA store, even when `SSL_CERT_FILE` is pointed at the certifi bundle. The fix was to force-replace the default HTTPS context in `mnist_datamodule.py` before any download occurs:
+
+```python
+import ssl, certifi
+ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
+```
+
+`certifi` and `requests` were added to `requirements.txt`.
+
+---
+
+### Implementation
+
+| Area | What was done |
+|------|--------------|
+| **Hydra config** | Filled in `configs/model/mnist_gan_model.yaml` — instantiated `Generator` and `Discriminator` via `_target_` with OmegaConf relative interpolation (`${..n_classes}` etc.) so all shared params stay single-sourced |
+| **GAN training step** | Implemented alternating generator / discriminator optimisation in `step()` using `optimizer_idx`; discriminator uses `.detach()` on generator output to prevent gradient leakage |
+| **W&B logging** | Loss scalars (`g_loss`, `d_loss`, `d_real_loss`, `d_fake_loss`) logged each step via `self.log_dict`; `on_epoch_end` logs a `torchvision.make_grid` image (2 rows × 5 cols, one digit class per cell) to W&B at `step=self.current_epoch` |
+| **Test evaluation** | Implemented `test_step` and made `trainer.test()` explicit in `train.py`, loading from the best checkpoint when available |
+| **Training length** | Set `max_epochs: 20` and `max_steps: -1` in the experiment config; aligned `ModelCheckpoint.every_n_train_steps` to ~1 checkpoint per epoch (1720 steps) instead of the original 10 000 |
+
+---
+
+### AI Suggestions Rejected / Corrected
+
+1. **Adding `certifi` + `requests` to requirements alone** — AI suggested this would fix the SSL error, but installing the packages without patching the default context had no effect (`urllib` still loaded the broken Windows cert store). Rejected; the actual fix required monkey-patching `ssl._create_default_https_context` in the datamodule.
+
+2. **Bumping `max_epochs` from 10 → 20 without `max_steps: -1`** — AI made the epoch change but left an implicit step ceiling in place. Rejected as incomplete; required explicitly setting `max_steps: -1` to ensure epoch count alone governs training length.
+
+---
+
+### Results — 20-Epoch Run
+
+**Final metrics (W&B run summary)**
+
+| Metric | Train | Test |
+|--------|-------|------|
+| `g_loss` | 0.367 | 0.393 |
+| `d_loss` | 0.194 | 0.228 |
+| `d_real_loss` | 0.198 | 0.303 |
+| `d_fake_loss` | 0.191 | 0.152 |
+| `global_step` | 17 200 | — |
+
+**Loss curves**
+
+![loss_curves](./images/loss_curves.png)
+
+Generator loss (`train/g_loss`) and discriminator loss (`train/d_loss`) both decrease and stabilise after ~5 k steps, indicating the training converged. The near-equal `d_real_loss` and `d_fake_loss` at the end of training shows the discriminator is roughly balanced between real and generated samples.
+
+**Generated samples progression**
+
+| Early training | Mid training | Epoch 20 (final) |
+|:-:|:-:|:-:|
+| ![gen_early](./images/gen_early.png) | ![gen_mid](./images/gen_mid.png) | ![gen_epoch20](./images/gen_epoch20.png) |
+
+Each grid shows one generated sample per digit class (0–9), arranged in two rows. Digit structure becomes clearly recognisable by epoch 20, consistent with the example in the assignment brief.
+
+---
+
+<div align="center">
+
 <a href="https://pytorch.org/get-started/locally/"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white"></a>
 <a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning-792ee5?logo=pytorchlightning&logoColor=white"></a>
 <a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a>
