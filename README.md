@@ -88,6 +88,59 @@ Each grid shows one generated sample per digit class (0–9), arranged in two ro
 
 ---
 
+## Part 2 — Open-Ended Tasks: CNN Conditional GAN on CIFAR-10
+
+Staying within the Hydra / PyTorch-Lightning / W&B framework, the MNIST GAN was extended along three of the suggested open-ended directions at once:
+
+1. **Own CNN networks** — replaced the MLP generator/discriminator with a DCGAN-style conditional CNN pair
+2. **More complex dataset** — swapped grayscale MNIST for colour CIFAR-10 (RGB, 32×32, 10 classes)
+3. **Added plugin/dependency** — integrated `torchmetrics` to track discriminator accuracy
+
+Everything was added as new, additive components (no existing MNIST files were changed) and wired together purely through new Hydra configs, so both experiments (`train_mnist_gan.yaml` and `train_cifar10_gan.yaml`) remain runnable side by side.
+
+### Implementation
+
+| Area | What was done |
+|------|--------------|
+| **CNN Generator** (`src/models/modules/cnn_generators.py`) | Noise + label embedding → `Linear` → reshape to `(256, 4, 4)` → 3× `ConvTranspose2d` blocks (4→8→16→32) → `Tanh`, producing `(3, 32, 32)` RGB images |
+| **CNN Discriminator** (`src/models/modules/cnn_discriminators.py`) | Label embedding reshaped to a `(1, 32, 32)` spatial map and concatenated as an extra image channel (spatial conditioning, works better with convolutions than the MLP's channel-concat-after-flatten); 3× `Conv2d` blocks (32→16→8→4) → `Linear` → 1 logit |
+| **CIFAR-10 DataModule** (`src/datamodules/cifar10_datamodule.py`) | Mirrors `MNISTDataModule` structure; 3-channel normalisation `[0.5]*3`; same certifi/SSL fix applied since `torchvision.datasets.CIFAR10` hit the identical Windows CA-store error |
+| **`CIFAR10GANModel`** (`src/models/cifar10_gan_model.py`) | Subclasses `MNISTGANModel` — inherits the alternating-optimisation `step()` logic unchanged; overrides `validation_step` to additionally track a `torchmetrics.Accuracy(task="binary")` discriminator accuracy metric, and overrides `on_epoch_end` for RGB-aware grid logging |
+| **Hydra configs** | New `configs/model/cifar10_gan_model.yaml`, `configs/datamodule/cifar10_datamodule.yaml`, `configs/experiment/train_cifar10_gan.yaml` — run with `python run.py experiment=train_cifar10_gan.yaml` |
+
+### Why `torchmetrics`?
+
+Loss values alone don't tell you whether the discriminator is actually distinguishing real from fake — an `MSELoss` value can look "reasonable" while the discriminator is essentially guessing. `Accuracy(task="binary")` gives a directly interpretable number: the fraction of real+fake images the discriminator classifies correctly each validation epoch, logged as `val/disc_acc`.
+
+### AI Suggestion Corrected
+
+`torchmetrics.Accuracy()` (no arguments) was the first attempt, following the same pattern as older PyTorch-Lightning tutorials the AI had seen. The installed `torchmetrics==0.11.4` raised a deprecation/type error because the argument-less binary API was removed — it now requires an explicit `task="binary"`. Corrected to `Accuracy(task="binary")` after checking the installed version directly with `python -c "import torchmetrics; print(torchmetrics.__version__)"` rather than assuming.
+
+### Results — 30-Epoch Run (RTX 5060 Ti)
+
+**Final metrics (W&B run summary)**
+
+| Metric | Train | Val | Test |
+|--------|-------|-----|------|
+| `g_loss` | 1.139 | 0.692 | 0.523 |
+| `d_loss` | 0.018 | 0.206 | 0.178 |
+| `d_real_loss` | 0.019 | 0.360 | 0.260 |
+| `d_fake_loss` | 0.017 | 0.052 | 0.096 |
+| `disc_acc` | — | 0.556 | — |
+| `global_step` | 22 360 | — | — |
+
+The very low `train/d_loss` (0.018) vs. much higher `val/d_loss` (0.206) shows the discriminator overfits on training data faster than on CIFAR-10's more complex, colourful images — expected, since natural-image textures are far harder to model than MNIST strokes. `val/disc_acc` of ~0.56 (barely above chance) shows the generator was strong enough by the end to regularly fool the discriminator, which is the desired GAN equilibrium behaviour rather than a training failure.
+
+**Generated samples progression**
+
+| Epoch 0 | Mid-training | Final (epoch 29) |
+|:-:|:-:|:-:|
+| ![cifar_gen_early](./images/cifar_gen_early.png) | ![cifar_gen_mid](./images/cifar_gen_mid.png) | ![cifar_gen_final](./images/cifar_gen_final.png) |
+
+At epoch 0 the generator outputs pure colour noise (no structure). By mid-training, blurry blob-like shapes with plausible colour distributions (greens, blues, browns) start to emerge. By the final epoch, recognisable coarse silhouettes of vehicles and animals appear against varied backgrounds — a reasonable result for a simple DCGAN trained on CPU/consumer GPU for 30 epochs; sharper detail would need more capacity, more epochs, and techniques like spectral normalisation or a stronger loss (e.g. WGAN-GP).
+
+---
+
 <div align="center">
 
 <a href="https://pytorch.org/get-started/locally/"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white"></a>

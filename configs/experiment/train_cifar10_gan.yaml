@@ -1,0 +1,22 @@
+# @package _global_
+
+# to execute this experiment run:
+# python run.py experiment=train_cifar10_gan.yaml
+
+defaults:
+  - override /trainer: default.yaml
+  - override /model: cifar10_gan_model.yaml
+  - override /datamodule: cifar10_datamodule.yaml
+  - override /callbacks: default.yaml
+  - override /logger: wandb.yaml
+
+seed: 12345
+
+trainer:
+  gpus: 0
+  max_epochs: 30
+  max_steps: -1  # governed by max_epochs only
+
+datamodule:
+  batch_size: 64
+  train_val_test_split: [50_000, 5_000, 5_000]

@@ -1,0 +1,155 @@
+_wandb:
+    value:
+        cli_version: 0.24.2
+        e:
+            497sfjci7dga39fufymeis01qxkr9ub0:
+                args:
+                    - experiment=train_cifar10_gan.yaml
+                cpu_count: 14
+                cpu_count_logical: 20
+                cudaVersion: "13.0"
+                disk:
+                    /:
+                        total: "785120956416"
+                        used: "577594712064"
+                email: chaukahogary@gmail.com
+                executable: C:\ProgramData\anaconda3\envs\pantheon-py38\python.exe
+                git:
+                    commit: 50d7ad9964207383b854db9ba45a684bbca049dc
+                    remote: https://github.com/pantheon-lab-public/ai-take-home-test.git
+                gpu: NVIDIA GeForce RTX 5060 Ti
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Blackwell
+                      cudaCores: 4608
+                      memoryTotal: "8546942976"
+                      name: NVIDIA GeForce RTX 5060 Ti
+                      uuid: GPU-3c8f3c71-8ac2-2a5a-c585-961d06c444ab
+                host: WIN-3OV2KKB77R3
+                memory:
+                    total: "34191204352"
+                os: Windows-10-10.0.19045-SP0
+                program: run.py
+                python: CPython 3.8.20
+                root: .
+                startedAt: "2026-08-26T12:21:08.682838Z"
+                writerId: 497sfjci7dga39fufymeis01qxkr9ub0
+        m:
+            - "1": trainer/global_step
+              "6":
+                - 3
+              "7": []
+            - "2": '*'
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.8.20
+        t:
+            "1":
+                - 1
+                - 9
+                - 41
+                - 50
+            "2":
+                - 1
+                - 9
+                - 41
+                - 50
+            "3":
+                - 7
+                - 15
+                - 66
+            "4": 3.8.20
+            "5": 0.24.2
+            "8":
+                - 3
+            "12": 0.24.2
+            "13": windows-amd64
+callbacks/model_checkpoint/_target_:
+    value: pytorch_lightning.callbacks.ModelCheckpoint
+callbacks/model_checkpoint/dirpath:
+    value: ckpts
+callbacks/model_checkpoint/every_n_train_steps:
+    value: 1720
+callbacks/model_checkpoint/filename:
+    value: '{epoch:03d}-{step:09d}'
+callbacks/model_checkpoint/monitor:
+    value: None
+callbacks/model_checkpoint/save_last:
+    value: true
+callbacks/model_checkpoint/save_top_k:
+    value: -1
+datamodule/_target_:
+    value: src.datamodules.cifar10_datamodule.CIFAR10DataModule
+datamodule/batch_size:
+    value: 64
+datamodule/data_dir:
+    value: E:\ai-take-home-test/data/
+datamodule/img_size:
+    value: 32
+datamodule/num_workers:
+    value: 0
+datamodule/pin_memory:
+    value: false
+datamodule/train_val_test_split:
+    value:
+        - 50000
+        - 5000
+        - 5000
+model/_target_:
+    value: src.models.cifar10_gan_model.CIFAR10GANModel
+model/b1:
+    value: 0.5
+model/b2:
+    value: 0.999
+model/channels:
+    value: 3
+model/discriminator/_target_:
+    value: src.models.modules.cnn_discriminators.CNNDiscriminator
+model/discriminator/channels:
+    value: 3
+model/discriminator/img_size:
+    value: 32
+model/discriminator/n_classes:
+    value: 10
+model/generator/_target_:
+    value: src.models.modules.cnn_generators.CNNGenerator
+model/generator/channels:
+    value: 3
+model/generator/img_size:
+    value: 32
+model/generator/latent_dim:
+    value: 100
+model/generator/n_classes:
+    value: 10
+model/img_size:
+    value: 32
+model/latent_dim:
+    value: 100
+model/lr:
+    value: 0.0002
+model/n_classes:
+    value: 10
+model/params_not_trainable:
+    value: 0
+model/params_total:
+    value: 1789288
+model/params_trainable:
+    value: 1789288
+seed:
+    value: 12345
+trainer/_target_:
+    value: pytorch_lightning.Trainer
+trainer/gpus:
+    value: 0
+trainer/max_epochs:
+    value: 30
+trainer/max_steps:
+    value: -1
+trainer/progress_bar_refresh_rate:
+    value: 5
+trainer/resume_from_checkpoint:
+    value: None
+trainer/weights_summary:
+    value: None

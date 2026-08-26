@@ -1,0 +1,4 @@
+- experiment=train_cifar10_gan.yaml
+- +trainer.fast_dev_run=true
+- logger=csv
+- print_config=false
